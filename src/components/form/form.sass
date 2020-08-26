@@ -1,2 +1,108 @@
-.form
+form
+  width: 400px
   padding: 20px
+
+  .text
+    margin-bottom: 8px
+    font-size: 11px
+    font-weight: bold
+    color: grey
+
+  .radio-container
+    padding: 4px 0 4px 16px
+    display: flex
+    justify-content: flex-start
+    align-items: center
+
+    .radio
+      position: relative
+      width: 12px
+      height: 12px
+      border-radius: 50%
+      border: 2px solid white
+      box-shadow: 0 0 0 1px grey
+      background-color: white
+      cursor: pointer
+
+      &.checked
+        background-color: #313131
+
+    .label
+      margin-left: 8px
+      display: flex
+      justify-content: flex-start
+      align-items: center
+      line-height: 1
+      font-weight: bold
+      color: #313131
+      cursor: default
+
+
+  .tax-container
+    padding: 8px 0 8px 36px
+    display: flex
+    justify-content: flex-start
+    align-items: center
+
+    .tax
+      font-size: 11px
+      font-weight: bold
+      color: grey
+      cursor: pointer
+
+      &.checked
+        color: #313131
+
+    .custom-switch
+      margin-left: 8px
+
+      .custom-control-input:checked ~ .custom-control-label::before
+        border-color: #fb9e51
+        background-color: #fb9e51
+
+
+.notice-container
+  position: relative
+  display: inline-block
+  margin-left: 8px
+  cursor: pointer
+
+  .icon
+    width: 18px
+    height: 18px
+    display: flex
+    justify-content: center
+    align-items: center
+    font-size: 10px
+    font-weight: bold
+    border-radius: 50%
+    border: 1px solid grey
+    color: grey
+
+    &.hide
+      padding-bottom: 2px
+
+  .notice
+    position: absolute
+    z-index: 9
+    left: 10px
+    top: 35px
+    width: 200px
+    padding: 14px
+    font-size: 11px
+    font-weight: bold
+    line-height: 1.4
+    color: white
+    background-color: #5d6da9
+
+    &:before
+      content: ''
+      position: absolute
+      left: 0
+      top: -12px
+      display: block
+      border-top: 6px solid transparent
+      border-right: 5px solid transparent
+      border-bottom: 6px solid #5d6da9
+      border-left: 5px solid #5d6da9
+
