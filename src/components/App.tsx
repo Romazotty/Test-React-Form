@@ -1,8 +1,9 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import * as React from "react";
+import './App.sass';
 
 function App() {
+  const logo = require("../logo.svg") as string;
+
   return (
     <div className="App">
       <header className="App-header">
