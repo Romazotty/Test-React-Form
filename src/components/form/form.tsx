@@ -1,14 +1,15 @@
 import * as React from 'react';
 import './form.sass';
-import {Field, InjectedFormProps, reduxForm} from 'redux-form';
+import {InjectedFormProps, reduxForm} from 'redux-form';
 import {Form} from 'react-bootstrap';
 
-class TestForm extends React.Component<InjectedFormProps, { [state: string]: any }> {
-  constructor(props: any) {
+class TestForm extends React.Component<InjectedFormProps, {[state: string]: any}>{
+  constructor(props: any){
     super(props);
 
     this.state = {
-      salary: 0,
+      salary: 40000,
+      salaryFormat: '40 000',
       type: 'month',
       tax: true
     };
@@ -35,33 +36,50 @@ class TestForm extends React.Component<InjectedFormProps, { [state: string]: any
     }
   ];
 
-  setType(type: string) {
+  setType(type: string){
     this.setState({
       type: type
     });
   }
 
-  setTax() {
+  setTax(){
     this.setState({
       tax: !this.state.tax
     });
   }
 
-  handleChange(event: any) {
+  handleChange(event: any){
+    const salary = event.target.value.split(' ').join('');
+
     this.setState({
-      salary: event.target.value
+      salary: isNaN(salary) ? 0 : +salary,
+      salaryFormat: isNaN(salary) ? 0 : this.formatNumber(salary)
     });
   }
 
-  getSalary() {
+  formatNumber(number: any){
+    let arr = number.toString().split('').reverse();
+    let res: any[] = [];
+
+    arr.forEach((el: any, i: number) => {
+      res.push(el);
+      if ((i + 1) % 3 === 0 && arr.length !== (i + 1)) {
+        res.push(' ')
+      }
+    });
+
+    return res.reverse().join('');
+  }
+
+  getSalary(){
     return this.state.tax ? this.state.salary : (this.state.salary * 0.87).toFixed();
   }
 
-  getSalaryWithTax() {
+  getSalaryWithTax(){
     return this.state.tax ? (this.state.salary / 0.87).toFixed() : this.state.salary;
   }
 
-  render() {
+  render(){
     return (
       <Form>
         <div className="text">Сумма</div>
@@ -97,25 +115,26 @@ class TestForm extends React.Component<InjectedFormProps, { [state: string]: any
           </div>
         </div>
 
-        <div className="sum">
-          <Field type="text"
-                 name="value"
-                 component="input"
-                 value={this.state.value}
-                 onChange={this.handleChange}/> P
+        <div className="input-container">
+          <Form.Control type="text"
+                        value={this.state.salaryFormat}
+                        onChange={this.handleChange}/> &#8381;
         </div>
 
         {
           this.state.type === 'month' &&
-          <div className="result">
-            <div className="string">
-              {this.getSalary()} P сотрудник будет получать на руки
+          <div className="result-container">
+            <div className="result">
+              <strong>{this.formatNumber(this.getSalary())} &#8381; </strong>
+              сотрудник будет получать на руки
             </div>
-            <div className="string">
-              {this.getSalaryWithTax() - this.getSalary()} P НДФЛ, 13% от оклада
+            <div className="result">
+              <strong>{this.formatNumber(this.getSalaryWithTax() - this.getSalary())} &#8381; </strong>
+              НДФЛ, 13% от оклада
             </div>
-            <div className="string">
-              {this.getSalaryWithTax()} P за сотрудника в месяц
+            <div className="result">
+              <strong>{this.formatNumber(this.getSalaryWithTax())} &#8381; </strong>
+              за сотрудника в месяц
             </div>
           </div>
         }
@@ -128,8 +147,8 @@ export default reduxForm({
   form: 'text-form'
 })(TestForm);
 
-class Notice extends React.Component<any, { [state: string]: any }> {
-  constructor(props: any) {
+class Notice extends React.Component<any, {[state: string]: any}>{
+  constructor(props: any){
     super(props);
 
     this.state = {
@@ -141,13 +160,13 @@ class Notice extends React.Component<any, { [state: string]: any }> {
     this.handleClick = this.handleClick.bind(this);
   }
 
-  handleHover(visible: boolean) {
+  handleHover(visible: boolean){
     this.setState({
       noticeHover: visible
     });
   }
 
-  handleClick(visible: boolean, e: any) {
+  handleClick(visible: boolean, e: any){
     e.stopPropagation();
 
     this.setState({
@@ -155,7 +174,7 @@ class Notice extends React.Component<any, { [state: string]: any }> {
     });
   }
 
-  render() {
+  render(){
     return (
       <div className="notice-container">
         {
