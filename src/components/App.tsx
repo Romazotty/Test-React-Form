@@ -5,11 +5,17 @@ import TestForm from "./form/form";
 import store from "../store";
 
 class App extends React.Component{
+  initialValues = {
+    salaryFormat: 40000,
+    type: 'month',
+    tax: '1'
+  };
+
   render(){
     return (
       <div className="app">
         <Provider store={store}>
-          <TestForm/>
+          <TestForm initialValues={this.initialValues}/>
         </Provider>
       </div>
     );

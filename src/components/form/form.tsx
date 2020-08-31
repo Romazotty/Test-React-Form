@@ -1,23 +1,11 @@
 import * as React from 'react';
 import './form.sass';
-import {formValueSelector, InjectedFormProps, reduxForm} from 'redux-form';
+import {Field, formValueSelector, reduxForm} from 'redux-form';
 import {Form} from 'react-bootstrap';
 import {connect} from "react-redux";
 
-let TestForm = (props: any) => {
-  // constructor(props: any){
-  //   super(props);
-  //
-  //   this.state = {
-  //     salary: 40000,
-  //     salaryFormat: '40 000',
-  //     type: 'month',
-  //     tax: true
-  //   };
-  //
-  //   this.handleChange = this.handleChange.bind(this);
-  // }
-
+let TestForm: any = (props: any) => {
+  const {type, tax, salary, sum, formatNumber} = props;
   const types = [
     {
       label: 'Оклад за месяц',
@@ -37,132 +25,112 @@ let TestForm = (props: any) => {
     }
   ];
 
-  // setType(type: string){
-  //   this.setState({
-  //     type: type
-  //   });
-  // }
-
-  // setTax(){
-  //   this.setState({
-  //     tax: !this.state.tax
-  //   });
-  // }
-
-  // handleChange(event: any){
-  //   const salary = event.target.value.split(' ').join('');
-  //
-  //   this.setState({
-  //     salary: isNaN(salary) ? 0 : +salary,
-  //     salaryFormat: isNaN(salary) ? 0 : this.formatNumber(salary)
-  //   });
-  // }
-
-  // getSalary(){
-  //   return this.state.tax ? this.state.salary : (this.state.salary * 0.87).toFixed();
-  // }
-  //
-  // getSalaryWithTax(){
-  //   return this.state.tax ? (this.state.salary / 0.87).toFixed() : this.state.salary;
-  // }
-
-  const formatNumber = (number: any) => {
-    let arr = number.toString().split('').reverse();
-    let res: any[] = [];
-
-    arr.forEach((el: any, i: number) => {
-      res.push(el);
-      if ((i + 1) % 3 === 0 && arr.length !== (i + 1)) {
-        res.push(' ')
-      }
-    });
-
-    return res.reverse().join('');
-  }
-
   return (
-    <Form>
+    <form>
       <div className="text">Сумма</div>
 
-      {/*{*/}
-        {/*types.map(type => (*/}
-          {/*<div className="radio-container" key={type.value}*/}
-               {/*onClick={() => this.setType(type.value)}>*/}
-            {/*<div className={'radio ' + (this.state.type === type.value && 'checked')}/>*/}
-            {/*<div className="label">*/}
-              {/*{type.label}{type.value === 'mrot' && <Notice/>}*/}
-            {/*</div>*/}
-          {/*</div>*/}
-        {/*))*/}
-      {/*}*/}
+      {
+        types.map(t => (
+          <label className="radio-container" key={t.value}>
+            <Field name="type" component="input" type="radio" value={t.value} hidden/>
+            <div className={'radio ' + (type === t.value && 'checked')}/>
+            <div className="label">
+              {t.label}{t.value === 'mrot' && <Notice/>}
+            </div>
+          </label>
+        ))
+      }
 
-      {/*<div className="tax-container">*/}
-        {/*<div className={'tax ' + (!this.state.tax && 'checked')}*/}
-             {/*onClick={() => this.setTax()}>*/}
-          {/*Указать с НДФЛ*/}
-        {/*</div>*/}
+      <div className="tax-container">
+        <label className={'tax ' + (tax === '0' && 'checked')}>
+          <Field name="tax" component="input" type="radio" value="0" hidden/>
+          Указать с НДФЛ
+        </label>
 
-        {/*<Form.Check type="switch">*/}
-          {/*<Form.Check.Input type="checkbox"*/}
-                            {/*checked={this.state.tax}*/}
-                            {/*onChange={() => this.setTax()}/>*/}
-          {/*<Form.Check.Label/>*/}
-        {/*</Form.Check>*/}
+        <Form.Check type="switch">
+          <Form.Check.Input type="checkbox"
+                            checked={tax === '1'}
+                            onChange={() => {}}/>
+          <Form.Check.Label/>
+        </Form.Check>
 
-        {/*<div className={'tax ' + (this.state.tax && 'checked')}*/}
-             {/*onClick={() => this.setTax()}>*/}
-          {/*Без НДФЛ*/}
-        {/*</div>*/}
-      {/*</div>*/}
+        <label className={'tax ' + (tax === '1' && 'checked')}>
+          <Field name="tax" component="input" type="radio" value="1" hidden/>
+          Без НДФЛ
+        </label>
+      </div>
 
-      {/*<div className="input-container">*/}
-        {/*<Form.Control type="text"*/}
-                      {/*value={this.state.salaryFormat}*/}
-                      {/*onChange={this.handleChange}/> &#8381;*/}
-      {/*</div>*/}
+      <div className="input-container">
+        <Field name="salaryFormat"
+               component="input"
+               type="text"
+               format={formatNumber}
+               normalize={formatNumber}/> &#8381;
+      </div>
 
-      {/*{*/}
-        {/*this.state.type === 'month' &&*/}
-        {/*<div className="result-container">*/}
-          {/*<div className="result">*/}
-            {/*<strong>{this.formatNumber(this.getSalary())} &#8381; </strong>*/}
-            {/*сотрудник будет получать на руки*/}
-          {/*</div>*/}
-          {/*<div className="result">*/}
-            {/*<strong>{this.formatNumber(this.getSalaryWithTax() - this.getSalary())} &#8381; </strong>*/}
-            {/*НДФЛ, 13% от оклада*/}
-          {/*</div>*/}
-          {/*<div className="result">*/}
-            {/*<strong>{this.formatNumber(this.getSalaryWithTax())} &#8381; </strong>*/}
-            {/*за сотрудника в месяц*/}
-          {/*</div>*/}
-        {/*</div>*/}
-      {/*}*/}
-    </Form>
+      {
+        type === 'month' &&
+        <div className="result-container">
+          <div className="result">
+            <strong>{formatNumber(salary)} &#8381; </strong>
+            сотрудник будет получать на руки
+          </div>
+          <div className="result">
+            <strong>{formatNumber(sum - salary)} &#8381; </strong>
+            НДФЛ, 13% от оклада
+          </div>
+          <div className="result">
+            <strong>{formatNumber(sum)} &#8381; </strong>
+            за сотрудника в месяц
+          </div>
+        </div>
+      }
+    </form>
   );
-}
-
+};
 
 TestForm = reduxForm({
-  form: 'test-form'
-})(TestForm)
+  form: 'test-form',
+  enableReinitialize: true
+})(TestForm);
 
-const selector = formValueSelector('test-form')
+const selector = formValueSelector('test-form');
 
 TestForm = connect(
   state => {
-    // can select values individually
-    const hasEmailValue = selector(state, 'hasEmail')
-    const favoriteColorValue = selector(state, 'favoriteColor')
-    // or together as a group
-    const {firstName, lastName} = selector(state, 'firstName', 'lastName')
+    const formatNumber = (s: number) => {
+      if (!s) {
+        return
+      }
+
+      let arr = s.toString().split(' ').join('').split('').reverse();
+      let res: any[] = [];
+
+      arr.forEach((el: any, i: number) => {
+        res.push(el);
+        if ((i + 1) % 3 === 0 && arr.length !== (i + 1)) {
+          res.push(' ')
+        }
+      });
+
+      return res.reverse().join('');
+    };
+
+    const type: string = selector(state, 'type');
+    const tax: string = selector(state, 'tax');
+    const salaryFormat: number = +(selector(state, 'salaryFormat') || 0).toString().split(' ').join('');
+    const salary: number = tax === '1' ? salaryFormat : +(salaryFormat * 0.87).toFixed();
+    const sum: number = tax === '1' ? +(salaryFormat / 0.87).toFixed() : salaryFormat;
+
     return {
-      hasEmailValue,
-      favoriteColorValue,
-      fullName: `${firstName || ''} ${lastName || ''}`
+      type,
+      tax,
+      salary,
+      sum,
+      formatNumber
     }
   }
-)(TestForm)
+)(TestForm);
 
 export default TestForm
 
